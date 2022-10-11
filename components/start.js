@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text, Button, TextInput, TouchableOpacity, Pressable, ImageBackground, StyleSheet } from 'react-native';
+import { View, Text, Button, TextInput, TouchableOpacity, Platform, KeyboardAvoidingView, Pressable, ImageBackground, StyleSheet } from 'react-native';
 import  BackgroundImage from '../assets/BackgroundImage.png';
 
 // Background Colors
@@ -40,18 +40,30 @@ export default function Start(props) {
 						<TouchableOpacity
 							style={[{ backgroundColor: colors.black }, styles.colorbutton]}
 							onPress={() => setColor(colors.black)}
+							accessibilityLabel="Option for black chat background"
+							accessibilityHint="Chat background coloring options"
+							accessibilityRole="button"
 						/>
 						<TouchableOpacity
 							style={[{ backgroundColor: colors.purple }, styles.colorbutton]}
 							onPress={() => setColor(colors.purple)}
+							accessibilityLabel="Option for Purple chat background"
+							accessibilityHint="Chat background coloring options"
+							accessibilityRole="button"
 						/>
 						<TouchableOpacity
 							style={[{ backgroundColor: colors.grey }, styles.colorbutton]}
 							onPress={() => setColor(colors.grey)}
+							accessibilityLabel="Option for grey chat background"
+							accessibilityHint="Chat background coloring options"
+							accessibilityRole="button"
 						/>
 						<TouchableOpacity
 							style={[{ backgroundColor: colors.green }, styles.colorbutton]}
 							onPress={() => setColor(colors.green)}
+							accessibilityLabel="Option for green chat background"
+							accessibilityHint="Chat background coloring options"
+							accessibilityRole="button"
 						/>
 					</View>
 
@@ -70,6 +82,8 @@ export default function Start(props) {
 					</Pressable>
 				</View>
 			</ImageBackground>
+			{/* Aviods android keyboards from overlapping */}
+			{Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null}
 		</View>
 	)
 }
