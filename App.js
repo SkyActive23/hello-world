@@ -1,6 +1,5 @@
-import { setStatusBarTranslucent, StatusBar } from 'expo-status-bar';
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, TextInput, Alert, Button, ScrollView } from 'react-native';
+
 //import the screens
 import Start from './components/start';
 import Chat from './components/chat';
@@ -36,6 +35,3 @@ export default class HelloWorld extends Component {
   } 
 }
 
-const styles = StyleSheet.create({
-
-});
