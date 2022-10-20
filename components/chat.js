@@ -3,13 +3,18 @@ import { View, Text, Button, TextInput, StyleSheet, Platform, KeyboardAvoidingVi
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import NetInfo from '@react-native-community/netinfo';
+
+import MapView from "react-native-maps";
+import CustomActions from './CustomActions';
 
 // import firebase for -v 9.0.0
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore'
+
+// const firebase = require('firebase');
+// require('firebase/firestore')
 
 export default class Chat extends Component {
 	constructor() {
@@ -21,6 +26,8 @@ export default class Chat extends Component {
 				_id: '',
 				name: '',
 				avatar: '',
+        image: null,
+        location: null,
 			},
       isConnected: false
 		}
@@ -115,6 +122,8 @@ export default class Chat extends Component {
 			text: message.text || "",
 			createdAt: message.createdAt,
 			user: message.user,
+      image: message.image || null,
+      location: message.location || null,
 		});
 	}
 
@@ -150,7 +159,7 @@ export default class Chat extends Component {
 		// go through each document
 		querySnapshot.forEach((doc) => {
 			// get the QueryDocumentSnapshot's data
-			let data = doc.data();
+			var data = doc.data();
 			messages.push({
 				_id: data._id,
 				text: data.text,
@@ -160,12 +169,14 @@ export default class Chat extends Component {
 					name: data.user.name,
 					avatar: data.user.avatar
 				},
-			});
+        image: data.image || null,
+        location: data.location || null, 
+      });
 		});
 		this.setState({
-			messages: messages
+			messages: messages,
 		});
-	}
+	};
 
 	// Customize the color of the sender bubble
 	renderBubble(props) {
@@ -192,6 +203,36 @@ export default class Chat extends Component {
     }
   }
 
+  renderCustomActions = (props) => {
+		return <CustomActions {...props} />;
+	};
+
+	// Renders the map location view
+	renderCustomView(props) {
+		const { currentMessage } = props;
+		if (currentMessage.location) {
+			return (
+				<MapView
+					style={{
+						width: 150,
+						height: 100,
+						borderRadius: 13,
+						margin: 3
+					}}
+					region={{
+						latitude: currentMessage.location.latitude,
+						longitude: currentMessage.location.latitude,
+						latitudeDelta: 0.0922,
+						longitudeDelta: 0.0421,
+					}}
+				/>
+			);
+		}
+		return null;
+	}
+
+
+
 	render() {
 		let { color, name } = this.props.route.params;
 		return (
@@ -200,6 +241,8 @@ export default class Chat extends Component {
 					renderBubble={this.renderBubble.bind(this)}
 					messages={this.state.messages}
 					onSend={(messages) => this.onSend(messages)}
+          renderActions={this.renderCustomActions}
+					renderCustomView={this.renderCustomView}
 					user={{
 						_id: this.state.user._id,
 						name: name,
